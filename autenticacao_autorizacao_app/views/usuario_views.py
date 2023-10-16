@@ -8,5 +8,6 @@ class CadastroNovoUsuarioView(views.APIView):
     if serializer.is_valid():
       # kwargs: keywordargs
       user = User.objects.create_user(**serializer.validated_data)
-
+      return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
   
