@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import environ
+from datetime import timedelta
 
 env = environ.Env(
   DEBUG = (bool, False)
@@ -31,7 +32,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -44,8 +45,18 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "autenticacao_autorizacao_app",
-    "rest_framework"
+    "rest_framework",
+    "rest_framework_simplejwt.token_blacklist"
 ]
+
+SIMPLE_JWT = {
+  "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(env('ACCESS_TOKEN_LIFETIME'))),
+  "REFRESH_TOKEN_LIFETIME": timedelta(days=int(env('REFRESH_TOKEN_LIFETIME'))),
+  "ROTATE_REFRESH_TOKENS": env("ROTATE_REFRESH_TOKENS"),
+  "ALGORITHM": env("ALGORITHM"),
+  "SIGNING_KEY": env("SIGNING_KEY"),
+  "AUTH_HEADER_TYPES": (env("AUTH_HEADER_TYPES"),)
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
